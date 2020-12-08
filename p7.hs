@@ -10,6 +10,11 @@ import qualified Data.Attoparsec.Text as P
 import Data.Char (isAlpha)
 import Data.List
 
+type Bag = T.Text
+type BagContents = [(Int, Bag)]
+type BagDef =  (M.HashMap Bag BagContents)
+data BagTree = BagTree Bag [BagTree] deriving (Show)
+
 input = unsafeReadFileT "input7.txt"
 
 createDef :: Text-> BagDef
@@ -20,23 +25,16 @@ createDef i =
 
 def = createDef input
 
-type Bag = T.Text
-type BagContents = [(Int, Bag)]
-
-type BagDef =  (M.HashMap Bag BagContents)
-
-data BagTree = BagTree Bag [BagTree] deriving (Show)
-
-foo :: BagDef -> Bag -> BagContents
+foo :: BagDef -> Bag -> [Bag]
 foo d b = concat $ unfoldr f [b]
-  where f :: [Bag] -> Maybe (BagContents, [Bag])
-        f b = let cont = concat $ catMaybes (map ((flip M.lookup) d) b)
+  where f :: [Bag] -> Maybe ([Bag], [Bag])
+        f b = let cont = map snd . concat $ catMaybes (map ((flip M.lookup) d) b)
               in if null cont
                  then Nothing
-                 else Just (cont, map snd cont)
+                 else Just (cont, cont)
 
 part1 =
-  let has = map (elem "shiny gold" . map snd . foo def) (M.keys def)
+  let has = map (elem "shiny gold" . foo def) (M.keys def)
    in sum (map (\x -> if x then 1 else 0) has)
 
 part2 = embed def "shiny gold" - 1
