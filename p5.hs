@@ -1,15 +1,14 @@
 import System.IO
 import Data.List (sort)
 
-bsp (lo, hi) [] = hi
-bsp (lo, hi) (x:xs) =
-  case x of
-    'F' -> bsp (lo, hi - step) xs
-    'B' -> bsp (lo + step, hi) xs
-    'L' -> bsp (lo, hi - step) xs
-    'R' -> bsp (lo + step, hi) xs
-  where
-    step = (hi - lo + 1) `div` 2
+bsp r l = fst $ foldl f r l
+  where f (lo, hi) x = case x of
+                        'F' -> (lo, hi - step)
+                        'B' -> (lo + step, hi)
+                        'L' -> (lo, hi - step)
+                        'R' -> (lo + step, hi)
+          where
+            step = (hi - lo + 1) `div` 2
 
 locate :: String -> (Int, Int)
 locate s =
