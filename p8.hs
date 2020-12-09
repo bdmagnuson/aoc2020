@@ -52,22 +52,6 @@ stepCPU = do
   halt .= (pc' == V.length prog')
   return ret
 
-input = unsafeReadFileT "input8.txt"
-program = V.fromList (fromRight [] $ P.parseOnly (P.many' parseInstr) input)
-  where
-    parseInstr = (parseNop <|> parseAcc <|> parseJmp) <* P.endOfLine
-    parseNop = do
-      P.string "nop "
-      val <- P.signed P.decimal
-      return $ Nop val
-    parseAcc = do
-      P.string "acc "
-      val <- P.signed P.decimal
-      return $ Acc val
-    parseJmp = do
-      P.string "jmp "
-      val <- P.signed P.decimal
-      return $ Jmp val
 
 initState p = Cpu 0 0 p S.empty False False
 
@@ -87,3 +71,19 @@ programs = map flipInstr [0..(V.length program)-1]
 part2 = (view acc . last . last) $ filter (\x -> (last x) ^. halt) (map runCPU programs)
 
 
+input = unsafeReadFileT "input8.txt"
+program = V.fromList (fromRight [] $ P.parseOnly (P.many' parseInstr) input)
+  where
+    parseInstr = (parseNop <|> parseAcc <|> parseJmp) <* P.endOfLine
+    parseNop = do
+      P.string "nop "
+      val <- P.signed P.decimal
+      return $ Nop val
+    parseAcc = do
+      P.string "acc "
+      val <- P.signed P.decimal
+      return $ Acc val
+    parseJmp = do
+      P.string "jmp "
+      val <- P.signed P.decimal
+      return $ Jmp val
