@@ -28,5 +28,6 @@ executable aoc2020
                      , unordered-containers
                      , vector
                      , mtl
+                     , recursion-schemes
   -- hs-source-dirs:
   default-language:    Haskell2010
