@@ -24,13 +24,13 @@ f mf (x:xs) = (sum $ map f [0,1,2])
            a@(as:_) -> if as <= x + 3 then mf a else 0
 
 f_map :: HM.HashMap [Integer] Integer
-f_map = let t = init $ tails (0:input)
-         in HM.fromList $ zip t (map (f faster_f) t)
+f_map = let t = tails (0:input)
+         in HM.fromList $ zip t (map (f f_memo) t)
 
-faster_f:: [Integer] -> Integer
-faster_f x = fromJust (HM.lookup x f_map)
+f_memo:: [Integer] -> Integer
+f_memo x = fromJust (HM.lookup x f_map)
 
-part2 = faster_f (0:input)
+part2 = f_memo (0:input)
 
 
 
