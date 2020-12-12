@@ -3,9 +3,6 @@
 
 import Utils
 import qualified Data.Attoparsec.Text as P
-import Control.Applicative
-import Data.Array
-import Data.Maybe
 import Control.Lens
 import Control.Monad.State.Strict
 
@@ -21,11 +18,10 @@ data Move
  | F Int
  | R RAmt deriving (Show)
 
-data Spot = Avail | Floor | Occ deriving (Show, Eq)
-type Floor = Array (Int, Int) Spot
-
+input :: [Move]
 input = parseInputT "input12.txt" (P.many' (pInstruction <* P.endOfLine))
 
+pInstruction :: P.Parser Move
 pInstruction = do
   action <- P.anyChar
   amt <- P.decimal
@@ -39,10 +35,13 @@ pInstruction = do
                      90  -> R R90
                      180 -> R R180
                      270 -> R R270
+                     _   -> error "bad dir"
             'L' -> case amt of
                      90  -> R R270
                      180 -> R R180
                      270 -> R R90
+                     _   -> error "bad dir"
+            _   -> error "bad instr"
 
 data St = St
  { _dir    :: Orientation
@@ -61,10 +60,10 @@ execInstr = \case
   E amt -> xWayPt += amt
   W amt -> xWayPt -= amt
   F amt -> do
-             xWayPt <- use xWayPt
-             yWayPt <- use yWayPt
-             xShip  += amt * xWayPt
-             yShip  += amt * yWayPt
+             xWayPt' <- use xWayPt
+             yWayPt' <- use yWayPt
+             xShip  += amt * xWayPt'
+             yShip  += amt * yWayPt'
   R amt -> do
     x' <- use xWayPt
     y' <- use yWayPt
@@ -73,10 +72,12 @@ execInstr = \case
       R180 -> yWayPt .= -y' >> xWayPt .= -x'
       R270 -> yWayPt .=  x' >> xWayPt .= -y'
 
+newLoc :: [Move] -> St
 newLoc x = execState (traverse execInstr x) (St East 0 0 10 1)
 
 manhatten :: St -> Int
 manhatten x = abs (x ^. xShip) +  abs (x ^. yShip)
 
+part2 :: Int
 part2 = manhatten (newLoc input)
 

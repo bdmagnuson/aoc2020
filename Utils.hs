@@ -3,11 +3,9 @@
 
 module Utils (unsafeReadFileT, unsafeReadFile, parseInputT) where
 
-import qualified Data.Text as T
 import Data.Text (Text)
 import qualified Data.Text.IO as TIO
 import System.IO.Unsafe
-import Data.Either (fromRight)
 import qualified Data.Attoparsec.Text as P
 
 unsafeReadFileT :: String -> Text
