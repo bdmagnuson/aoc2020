@@ -24,8 +24,5 @@ step (phase1, period1) (phase2, period2) = (x, lcm')
         (z, 0) = (phase1 - phase2) `divMod` (gcd period1 period2)
         x = (-(z * s) * period1 + phase1) `mod` lcm'
 
-part2 x = let (ph, per) = foldl1 step x
-          in (per - ph)
-
-
+part2 x = let (ph, per) = foldl1 step x in (per - ph)
 
