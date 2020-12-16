@@ -16,10 +16,12 @@ maintainer:          bmagnuso@amazon.com
 build-type:          Simple
 extra-source-files:  CHANGELOG.md
 
+
 executable aoc2020
-  main-is:             Main.hs
+  main-is:            p16.hs
   -- other-modules:
   -- other-extensions:
+  ghc-options:       -O2
   build-depends:       base >=4.11 && <4.12
                      , attoparsec
                      , text
