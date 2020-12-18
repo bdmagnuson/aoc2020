@@ -1,16 +1,13 @@
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE FlexibleContexts #-}
 
 import Utils
 import qualified Data.Attoparsec.Text as P
-import Data.Text (Text)
-import qualified Data.Text as T
 import Control.Applicative
 import qualified Data.HashMap.Strict as HM
-import Control.Monad.State.Strict
 import Control.Lens
-import Control.Monad
 import Data.Maybe (fromJust, fromMaybe)
 
 data Cond = Active | Inactive deriving (Show, Eq)
